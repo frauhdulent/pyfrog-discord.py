@@ -36,6 +36,20 @@ class mod(commands.Cog):
     async def kick_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(f'{(ctx.message.author.mention)} Uhm you forgot to mention the user.')
+    
+    
+    @commands.command(pass_context=True)
+    @commands.has_permissions(administrator=True)
+    async def purge(self, ctx, limit: int):
+        await ctx.channel.purge(limit=limit)
+        await ctx.send('Cleared by {}'.format(ctx.author.mention))
+        await ctx.message.delete()
+
+    @clean.error
+    async def clear_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send("You don't have administrator role.")
 
 def setup(client):
     client.add_cog(mod(client))
+    
